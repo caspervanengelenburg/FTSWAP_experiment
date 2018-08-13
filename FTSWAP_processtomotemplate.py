@@ -26,8 +26,7 @@ import numpy as np
 import qiskit
 from qiskit import QuantumCircuit, QuantumProgram, register
 
-# Register at IBM QExperience using token
-register(qx_config['APItoken'])
+
 
 # import tomography libary
 import qiskit.tools.qcvv.tomography as tomo
@@ -35,6 +34,10 @@ import qiskit.tools.qcvv.tomography as tomo
 # useful additional packages 
 from qiskit.tools.visualization import plot_state
 from qiskit.tools.qi.qi import *
+
+# Register at IBM QExperience using token
+register(qx_config['APItoken'])
+
 
 # Creating registers
 Q_program = QuantumProgram()
@@ -122,7 +125,7 @@ qc2.cx(q2[1], q2[2])
 qc2.cx(q2[1], q2[2])
 ################################################################################
 # Set number of shots and backend
-shots = 200
+shots = 20
 backendsim = 'local_qasm_simulator'
 backendreal = 'ibmqx4'
 ###############################################################################
@@ -176,12 +179,12 @@ tomo_set = tomo.process_tomography_set([1,0],'Pauli','Pauli')
 tomo_circuits = tomo.create_tomography_circuits(Q_program,'FTSWAP',q,c,tomo_set)
 
 # Execute the tomo circuits
-tomo_results = Q_program.execute(tomo_circuits, shots=shots, backend=backendsim,timeout=30)
+tomo_results = Q_program.execute(tomo_circuits, shots=shots, backend=backendsim,timeout=50)
 
 
 # Gather data from the results
 tomo_data = tomo.tomography_data(tomo_results,'FTSWAP',tomo_set)
-swap_choi_fit = tomo.fit_tomography_data(tomo_data,'leastsq',options={'trace':4})
+swap_choi_fit = tomo.fit_tomography_data(tomo_data,'leastsq',options={'trace':2})
 
 ###############################################################################
 # Define perfect results

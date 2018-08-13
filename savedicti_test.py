@@ -8,8 +8,12 @@ import pickle
 import os
 
 from datetime import datetime
-timestamp = datetime.now().strftime("%m_%d-%H_%M_%S")
+
+timenow = datetime.now()
+timestamp = timestamp.strftime("%m_%d-%H_%M_%S")
+
 directory = 'Measured data/'
+
 filepath = directory+timestamp+"--tomodata.txt"
 
 os.makedirs(os.path.dirname(filepath), exist_ok=True)
@@ -17,7 +21,8 @@ os.makedirs(os.path.dirname(filepath), exist_ok=True)
 fo = open(filepath, "wb")
 
 
-
+def save_data(timestamp,circuit_name,run_type,tomo_data,nr_shots,notes=None):
+    return locals(timestamp,circuit_name,run type)
 pickle.dump(tomo_data, fo)
 
 fi = open(filepath,"rb")
