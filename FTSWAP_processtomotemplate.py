@@ -5,6 +5,13 @@ Created on Fri Aug  3 15:01:21 2018
 @author: Jarnd
 """
 
+
+"""
+This code was inspired/based on the qiskit tutorials provided by IBM, available
+at the qiskit-tutorials github. The Q_Exp_register file especially is based on 
+the 'process_tomography.py' file.
+"""
+
 # importing the QISKit
 from qiskit import register
 
