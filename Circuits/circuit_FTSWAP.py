@@ -15,7 +15,7 @@ c = Q_program.create_classical_register("cr", 3)
 qc = Q_program.create_circuit("FTSWAP",[q],[c])
 
 
-#################################################################################
+###############################################################################
 #Specify FT SWAP circuit
 
 # Swap gate between qubit 0 and 2 as 3 CX's
@@ -54,3 +54,6 @@ qc.h(q[1])
 qc.h(q[2])
 # CX from qubit 2 to qubit 1
 qc.cx(q[2], q[1])
+
+###############################################################################
+# Define 

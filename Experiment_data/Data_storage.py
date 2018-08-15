@@ -19,7 +19,7 @@ def save_data(circuit_name,run_type,backend,tomo_data,nr_shots,notes=None):
         directory = 'Simulation_data/'
     elif run_type == 'r':
         directory = 'Real_data/'
-    filepath = 'Experiment_data/'+directory+timenow.strftime("%m_%d-%H_%M_%S")+"--tomodata.txt"
+    filepath = 'Experiment_data/'+directory+circuit_name+timenow.strftime("%m_%d-%H_%M_%S")+"--tomodata.txt"
     os.makedirs(os.path.dirname(filepath), exist_ok=True)
     data = {'Experiment time' : timenow , 'Circuit name' : circuit_name , 
             'Type' : run_type , 'Backend' : backend , 'Data' : tomo_data ,
@@ -27,7 +27,7 @@ def save_data(circuit_name,run_type,backend,tomo_data,nr_shots,notes=None):
     pickle.dump(data, open(filepath, "wb"))
     return data
 
-def load_data(run_type,timestamp=None):
+def load_data(circuit_name,run_type,timestamp=None):
     if run_type == 's':
         directory = 'Simulation data/'
     elif run_type == 'r':
@@ -36,13 +36,13 @@ def load_data(run_type,timestamp=None):
     if timestamp == None:
         date = input('Date of experiment (mm_dd):')
         time = input('Time of experiment (hh_mm_ss):')
-        filepath = directory+date+'-'+time+'--tomodata.txt'
+        filepath = directory+circuit_name+date+'-'+time+'--tomodata.txt'
         data_load = pickle.load(open(filepath,'rb'))
     elif type(timestamp) == datetime:
-        filepath = directory+timestamp.strftime("%m_%d-%H_%M_%S")+"--tomodata.txt"
+        filepath = directory+circuit_name+timestamp.strftime("%m_%d-%H_%M_%S")+"--tomodata.txt"
         data_load = pickle.load(open(filepath,"rb"))
     elif type(timestamp) == str:
-        filepath = directory+timestamp+"--tomodata.txt"
+        filepath = directory+circuit_name+timestamp+"--tomodata.txt"
         data_load = pickle.load(open(filepath,"rb"))   
     return data_load
         

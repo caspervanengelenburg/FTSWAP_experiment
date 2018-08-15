@@ -18,13 +18,16 @@ import Functions.Create_tomo_circuits as tomo
 
 ###############################################################################
 # Simulation or real experimemt? 's' for simulation, 'r' for real
-run_type = 's'
+run_type = 'r'
 reg = True #Set to true to register at IBM
 
 notes = ''#Optional notes to be stored in the datafile
-maximum_credits = 8
-anal_true = True
+maximum_credits = 8;
+batchsize = 2;
+anal_true = False
 plot_true = True
+
+nr_batches = 6;
 
 ###############################################################################
 # Register at IBM Quantum Experience using token
@@ -53,19 +56,30 @@ elif run_type == 'r':
 else: print('Error, wrong runtype!')
 ################################################################################
 # Create tomo set and tomo circuits; put them in the quantum program
-[Q_program,tomo_set,tomo_circuits] = tomo.create_tomo_circuits(Q_program,circuit_name,q,c,[1,0],meas_basis,prep_basis)
+[Q_program,tomo_set,tomo_circuits] = tomo.create_tomo_circuits(Q_program, circuit_name,q,c,[1,0],meas_basis,prep_basis)
 
 
 
 # Execute all the tomo circuits
-results = Q_program.execute(tomo_circuits, shots=shots, backend=backend,timeout=timeout,max_credits = maximum_credits)
+batch_size = int(len(tomo_circuits)/nr_batches);
+for i in range(nr_batches):
+    run_circuits = tomo_circuits[i*batch_size:(i+1)*batch_size]
+    
+    if i==0:
+        results = Q_program.execute(run_circuits, backend=backend, shots=shots,
+                                                max_credits=maximum_credits, timeout=500)
+    else:
+        results += Q_program.execute(run_circuits, backend=backend, shots=shots,
+                                                max_credits=maximum_credits, timeout=500)
+    msg = 'Batch %d/%d: %s' % (i+1, nr_batches, results)
+    print(msg)
 
 ###############################################################################
 # Gather data from the results & save to specific folder
 results_data = tomo.extract_data(results,circuit_name,tomo_set)
 
-store.save_data(circuit_name,run_type,backend,results_data,shots,notes)
-
+data = store.save_data(circuit_name,run_type,backend,results_data,shots,notes)
+timestamp=data['Experiment time'];
 
 ###############################################################################
 if anal_true == True:
