@@ -1,0 +1,3 @@
+Job id's for experiment ran on 2018-08-22T11:45:38.355225+00:00
+Data saved on 08_22-13_46_37
+Experiment type is simulation

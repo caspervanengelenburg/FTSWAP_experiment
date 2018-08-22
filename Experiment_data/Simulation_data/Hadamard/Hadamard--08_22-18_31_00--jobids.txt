@@ -1,0 +1,50 @@
+Job id's for experiment ran on 2018-08-22T16:29:04.936968+00:00
+Data saved on 08_22-18_31_00
+Experiment type is simulation
+Number of batches is 9
+
+Job nr 1/9: 
+Date: 2018-08-22T16:29:04.936968+00:00
+Job id:
+5b7d8f5250113c003a17a426
+
+Job nr 2/9: 
+Date: 2018-08-22T16:29:09.416653+00:00
+Job id:
+5b7d8f55cc0f5900514424e5
+
+Job nr 3/9: 
+Date: 2018-08-22T16:29:12.356253+00:00
+Job id:
+5b7d8f5eca9aa7003a503664
+
+Job nr 4/9: 
+Date: 2018-08-22T16:29:21.764214+00:00
+Job id:
+5b7d8f610feca300368b53fe
+
+Job nr 5/9: 
+Date: 2018-08-22T16:29:24.282926+00:00
+Job id:
+5b7d8f640a69f5004572c2ff
+
+Job nr 6/9: 
+Date: 2018-08-22T16:29:27.902980+00:00
+Job id:
+5b7d8f670feca300368b5401
+
+Job nr 7/9: 
+Date: 2018-08-22T16:29:30.093519+00:00
+Job id:
+5b7d8faeb22e6a003842635a
+
+Job nr 8/9: 
+Date: 2018-08-22T16:30:40.844921+00:00
+Job id:
+5b7d8fb1f339910038434de5
+
+Job nr 9/9: 
+Date: 2018-08-22T16:30:50.366585+00:00
+Job id:
+5b7d8fc09d5b8200579f4e42
+

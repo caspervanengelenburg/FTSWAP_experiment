@@ -5,7 +5,7 @@ Created on Tue Aug 14 16:02:12 2018
 @author: Jarnd
 """
 from qiskit import QuantumProgram
-# Creating registers
+# Creating program
 Q_program = QuantumProgram()
 
 # Creating registers

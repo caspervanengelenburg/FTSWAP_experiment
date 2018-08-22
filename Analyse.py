@@ -6,21 +6,24 @@ Created on Wed Aug 15 08:59:49 2018
 """
 
 import Analysis.Analysis as an
-import Experiment_data.Data_storage as store
+import Functions.results_gathering as rg
+from qiskit.tools.visualization import plot_state
 
 direct = True
 run_type = 's'
 
 fit_method = 'leastsq'
+circuit_name = 'Hadamard'
 
-if direct == True:
-    loaded_data = store.load_data(circuit_name,run_type,timestamp)
-elif direct == False:
-    date = input('Date of experiment (mm_dd):')
-    time = input('Time of experiment (hh_mm_ss):')
-    circuit = input('Name of experinent circuit:')
-    loaded_data = store.load_data(circuit,run_type,date+'-'+time)
 
-loaded_tomo_data = loaded_data['Data'];
 
-an.fit_tomodata(loaded_tomo_data, method=fit_method);
+
+
+
+[jobids, tomo_set] = rg.get_jobids_from_file(direct,circuit_name,run_type)
+results = rg.get_results_from_jobids(jobids,run_type)
+
+tomo_data = an.tomo.tomography_data(results,circuit_name,tomo_set)
+choi_fit = an.fit_tomodata(tomo_data)
+
+plot_state(choi_fit)
