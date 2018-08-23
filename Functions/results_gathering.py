@@ -31,6 +31,18 @@ def get_results_from_jobids(jobids,run_type):
             results += job.result()
     return results
 
+def cancel_jobs_from_jobids(jobids):
+    nr_batches = len(jobids)
+    for i in range(nr_batches):
+        jobinfo = api.get_job(jobids[i])
+        job = IBMQJob.from_api(jobinfo, api, True)
+        if job.done:
+            print('Job with id=%s already done)\n' %(jobids[i]))
+            break
+        jobcancel = job.cancel()
+        if not jobcancel:
+            print('Job with id=%s cannot be cancelled)\n' %(jobids[i]))
+
 def get_tomoset_from_file(direct, circuit_name = None, run_type = None, timestamp = None):
     if direct == True:
         loaded_jobiddata = store.load_last()
@@ -66,4 +78,39 @@ def get_jobids_from_file(direct, circuit_name = None, run_type = None, timestamp
     for job in loaded_jobiddata['Data']:
         jobids[job['batchno']] = job['Jobid']
     return [jobids, loaded_jobiddata['Tomoset']]
+
+
+def get_last_jobids(nr=1, dates=True, status=True,only_real = False):
+    data = []
+    jobs=api.get_jobs(nr)
+    for i in range(len(jobs)):
+        if only_real:
+            if jobs[i]['backend']['name'] != 'ibmqx4':
+                continue
+        entry = [jobs[i]['id']]
+        if dates == True:
+            entry.append(jobs[i]['creationDate'])
+        if status == True:
+            entry.append(jobs[i]['status'])
+        data.append(entry)
+    return data
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
