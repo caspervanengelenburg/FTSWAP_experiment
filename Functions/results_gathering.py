@@ -38,8 +38,10 @@ def cancel_jobs_from_jobids(jobids):
         job = IBMQJob.from_api(jobinfo, api, True)
         if job.done:
             print('Job with id=%s already done)\n' %(jobids[i]))
-            break
+            continue
         jobcancel = job.cancel()
+        if jobcancel:
+            print('Job with id=%s has been cancelled)\n' %(jobids[i]))
         if not jobcancel:
             print('Job with id=%s cannot be cancelled)\n' %(jobids[i]))
 
@@ -80,7 +82,7 @@ def get_jobids_from_file(direct, circuit_name = None, run_type = None, timestamp
     return [jobids, loaded_jobiddata['Tomoset']]
 
 
-def get_last_jobids(nr=1, dates=True, status=True,only_real = False):
+def get_last_jobids_and_data(nr=1, dates=True, status=True,only_real = False):
     data = []
     jobs=api.get_jobs(nr)
     for i in range(len(jobs)):
@@ -96,10 +98,23 @@ def get_last_jobids(nr=1, dates=True, status=True,only_real = False):
     return data
 
 
+def get_last_jobids(nr=1, only_real = False):
+    data = []
+    jobs=api.get_jobs(nr)
+    for i in range(len(jobs)):
+        if only_real:
+            if jobs[i]['backend']['name'] != 'ibmqx4':
+                continue
+        data.append(jobs[i]['id'])
+    return data
 
-
-
-
+def get_status_from_jobids(jobids, printing = False):
+    job_stati = []
+    for jobid in jobids:
+        jobstatus = api.get_job(jobid)['status']
+        if printing == True: print('Job status: '+jobstatus)
+        job_stati.append(jobstatus)
+    return job_stati
 
 
 

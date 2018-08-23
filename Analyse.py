@@ -10,7 +10,7 @@ import Functions.results_gathering as rg
 from qiskit.tools.visualization import plot_state
 
 direct = True
-run_type = 's'
+run_type = 'r'
 
 fit_method = 'leastsq'
 circuit_name = 'Hadamard'
@@ -21,9 +21,12 @@ circuit_name = 'Hadamard'
 
 
 [jobids, tomo_set] = rg.get_jobids_from_file(direct,circuit_name,run_type)
-results = rg.get_results_from_jobids(jobids,run_type)
+stati = rg.get_status_from_jobids(jobids,printing=True)
 
-tomo_data = an.tomo.tomography_data(results,circuit_name,tomo_set)
-choi_fit = an.fit_tomodata(tomo_data)
+if 'RUNNING' not in stati:
+    results = rg.get_results_from_jobids(jobids,run_type)
 
-plot_state(choi_fit)
+    tomo_data = an.tomo.tomography_data(results,circuit_name,tomo_set)
+    choi_fit = an.fit_tomodata(tomo_data)
+
+    plot_state(choi_fit)

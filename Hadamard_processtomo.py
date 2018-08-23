@@ -13,17 +13,16 @@ the 'process_tomography.py' file.
 """
 
 
-# importing the QISKit
-from qiskit import register, execute, get_backend
+# importing the needed functions from QISKit
+from qiskit import register, execute
 
 
 
 
 # useful additional packages 
-import Analysis.Analysis as an
 import Functions.Data_storage as store
 import Functions.Create_tomo_circuits as tomo
-from time import sleep
+
 
 ###############################################################################
 # Simulation or real experimemt? 's' for simulation, 'r' for real
@@ -35,7 +34,7 @@ maximum_credits = 8; # Maximum number of credits
 anal_true = False # Set to true if you want to perform direct small analysis of the tomo data
 plot_true = True # Set to true if you want to plot that data as well immediatley
 
-nr_batches = 2; # Tries 6 batches, if total number of circuits is not divisible adds one extra batch with the leftovers
+nr_batches = 1; # Tries 6 batches, if total number of circuits is not divisible adds one extra batch with the leftovers
 
 interval = 60;
 lapse = 0;
