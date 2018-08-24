@@ -95,6 +95,7 @@ def get_last_jobids_and_data(nr=1, dates=True, status=True,only_real = False):
         if status == True:
             entry.append(jobs[i]['status'])
         data.append(entry)
+        
     return data
 
 

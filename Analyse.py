@@ -9,7 +9,7 @@ import Analysis.Analysis as an
 import Functions.results_gathering as rg
 from qiskit.tools.visualization import plot_state
 
-direct = True
+direct = False
 run_type = 'r'
 
 fit_method = 'leastsq'

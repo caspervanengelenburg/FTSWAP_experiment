@@ -31,13 +31,10 @@ reg = True #Set to true to register at IBM
 
 notes = ''#Optional notes to be stored in the datafile
 maximum_credits = 8; # Maximum number of credits
-anal_true = False # Set to true if you want to perform direct small analysis of the tomo data
-plot_true = True # Set to true if you want to plot that data as well immediatley
+
 
 nr_batches = 9; # Tries 6 batches, if total number of circuits is not divisible adds one extra batch with the leftovers
 
-interval = 60;
-lapse = 0;
 
 ###############################################################################
 # Register at IBM Quantum Experience using token
@@ -53,7 +50,7 @@ circuit_name = Q_program.get_circuit_names()[0]
 ###############################################################################
 # Set number of shots, timeout, measurement- and preperation basis and backend
 shots = 200 # #shots for every circuit
-timeout = 500000 # timeout in seconds before execution halts. This is the per-batch timeout, so total runtime <500*(nr_batches+1) seconds
+#timeout = 500000 # timeout in seconds before execution halts. This is the per-batch timeout, so total runtime <500*(nr_batches+1) seconds
 backendsim = 'ibmq_qasm_simulator' # The backend to use in the simulations. Check available_backends() for all backends
 backendreal = 'ibmqx4' # The backed to use for the actual experiments (e.g. the chip)
 meas_basis, prep_basis = 'Pauli', 'Pauli' # Measurement and preparation basis for process tomography
