@@ -9,7 +9,7 @@ import Analysis.Analysis as an
 import Functions.results_gathering as rg
 from qiskit.tools.visualization import plot_state
 
-direct = False
+direct = True
 run_type = 'r'
 
 fit_method = 'leastsq'
@@ -22,6 +22,7 @@ circuit_name = 'Hadamard'
 
 [jobids, tomo_set] = rg.get_jobids_from_file(direct,circuit_name,run_type)
 stati = rg.get_status_from_jobids(jobids,printing=True)
+
 
 if 'RUNNING' not in stati:
     results = rg.get_results_from_jobids(jobids,run_type)

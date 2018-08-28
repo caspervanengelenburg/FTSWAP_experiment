@@ -19,10 +19,8 @@ from qiskit import register, execute, get_backend
 
 
 # useful additional packages 
-import Analysis.Analysis as an
 import Functions.Data_storage as store
 import Functions.Create_tomo_circuits as tomo
-from time import sleep
 
 ###############################################################################
 # Simulation or real experimemt? 's' for simulation, 'r' for real
@@ -33,7 +31,7 @@ notes = ''#Optional notes to be stored in the datafile
 maximum_credits = 8; # Maximum number of credits
 
 
-nr_batches = 9; # Tries 6 batches, if total number of circuits is not divisible adds one extra batch with the leftovers
+nr_batches = 6; # Tries 6 batches, if total number of circuits is not divisible adds one extra batch with the leftovers
 
 
 ###############################################################################
