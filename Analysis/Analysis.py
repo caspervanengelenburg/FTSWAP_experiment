@@ -13,9 +13,9 @@ def fit_tomodata(tomo_data,method=None):
         print('Error, no method yet!')
         choi_fit = []
     elif method == None:
-        choi_fit = tomo.fit_tomography_data(tomo_data,options={'trace':1})
+        choi_fit = tomo.fit_tomography_data(tomo_data,options={'trace':4})
     else: 
-        choi_fit = tomo.fit_tomography_data(tomo_data,method,options={'trace':1})
+        choi_fit = tomo.fit_tomography_data(tomo_data,method,options={'trace':4})
     return choi_fit
 
 def plot(choi_matrix,method=None,message=None):

@@ -1,0 +1,10 @@
+Job id's for experiment ran on 2018-08-23T14:28:19.015199+00:00
+Data saved on 08_23-16_28_22
+Experiment type is real
+Number of batches is 1
+
+Job nr 1/1: 
+Date: 2018-08-23T14:28:19.015199+00:00
+Job id:
+5b7ec483fd66020037d52271
+

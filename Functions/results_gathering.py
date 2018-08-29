@@ -79,7 +79,7 @@ def get_jobids_from_file(direct, circuit_name = None, run_type = None, timestamp
     jobids = ['']*nr_batches
     for job in loaded_jobiddata['Data']:
         jobids[job['batchno']] = job['Jobid']
-    return [jobids, loaded_jobiddata['Tomoset']]
+    return [jobids, loaded_jobiddata]
 
 
 def get_last_jobids_and_data(nr=1, dates=True, status=True,only_real = False):
@@ -94,8 +94,7 @@ def get_last_jobids_and_data(nr=1, dates=True, status=True,only_real = False):
             entry.append(jobs[i]['creationDate'])
         if status == True:
             entry.append(jobs[i]['status'])
-        data.append(entry)
-        
+        data.append(entry)     
     return data
 
 
@@ -109,12 +108,16 @@ def get_last_jobids(nr=1, only_real = False):
         data.append(jobs[i]['id'])
     return data
 
+
 def get_status_from_jobids(jobids, printing = False):
     job_stati = []
+    jobnr = 1;
+    totalnr = len(jobids)
     for jobid in jobids:
         jobstatus = api.get_job(jobid)['status']
-        if printing == True: print('Job status: '+jobstatus)
+        if printing == True: print('Job nr %d/%d status: %s' %(jobnr, totalnr, jobstatus))
         job_stati.append(jobstatus)
+        jobnr+=1
     return job_stati
 
 

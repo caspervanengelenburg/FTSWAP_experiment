@@ -46,17 +46,17 @@ def load_tomo_data(circuit_name,run_type,timestamp=None):
         data_load = pickle.load(open(filepath,"rb"))   
     return data_load
         
-def save_jobids(circuit_name,data,tomo_set,backend,nr_shots,nr_batches,run_type, notes=None):
+def save_jobdata(circuit_name,jobs_data,tomo_set,backend,nr_shots,nr_batches,run_type, notes=None):
     timenow = datetime.now()
     if run_type == 's':
         directory = 'Experiment_data/Simulation_data/'
     elif run_type == 'r':
         directory = 'Experiment_data/Real_data/'    
-    filepathtxt = directory+circuit_name+'/'+circuit_name+'--'+timenow.strftime("%m_%d-%H_%M_%S")+"--jobids.txt"
-    filepathpickle = directory+circuit_name+'/'+circuit_name+'--'+timenow.strftime("%m_%d-%H_%M_%S")+"--jobids.pickle"
+    filepathtxt = directory+circuit_name+'/'+circuit_name+'--'+timenow.strftime("%m_%d-%H_%M_%S")+"--jobdata.txt"
+    filepathpickle = directory+circuit_name+'/'+circuit_name+'--'+timenow.strftime("%m_%d-%H_%M_%S")+"--jobdata.pickle"
     os.makedirs(os.path.dirname(filepathtxt), exist_ok=True)
     fo = open(filepathtxt,'w')
-    fo.write('Job id\'s for experiment ran on '+data[0]['Date']+'\n')
+    fo.write('Job id\'s for experiment ran on '+jobs_data[0]['Date']+'\n')
     fo.write('Data saved on '+timenow.strftime("%m_%d-%H_%M_%S")+'\n')
     if run_type == 's':
         exptype = 'simulation'
@@ -64,13 +64,13 @@ def save_jobids(circuit_name,data,tomo_set,backend,nr_shots,nr_batches,run_type,
         exptype = 'real'
     fo.write('Experiment type is '+exptype+'\n')
     fo.write('Number of batches is '+str(nr_batches)+'\n\n')
-    for job in data:
+    for job in jobs_data:
         fo.write('Job nr %d/%d: \n'% (job['batchno']+1,nr_batches))
         fo.write('Date: '+job['Date']+'\n')
         fo.write('Job id:\n'+job['Jobid']+'\n\n')
     fo.close()
     datadict = {'Experiment time' : timenow , 'Circuit name' : circuit_name , 
-            'Type' : run_type , 'Backend' : backend , 'Data' : data , 
+            'Type' : run_type , 'Backend' : backend , 'Data' : jobs_data , 
             'Tomoset' : tomo_set , 'Shot number' : nr_shots , 
             'Batchnumber' : nr_batches , 'Notes' : notes}
     fo = open(filepathpickle, 'wb')
@@ -88,19 +88,19 @@ def load_jobids(circuit_name, run_type, timestamp=None):
     if timestamp == None:
         date = input('Date of experiment (mm_dd):')
         time = input('Time of experiment (hh_mm_ss):')
-        filepath = directory+circuit_name+'/'+circuit_name+'--'+date+'-'+time+'--jobids.pickle'
+        filepath = directory+circuit_name+'/'+circuit_name+'--'+date+'-'+time+'--jobdata.pickle'
         data_load = pickle.load(open(filepath,'rb'))
     elif type(timestamp) == datetime:
-        filepath = directory+circuit_name+'/'+circuit_name+'--'+timestamp.strftime("%m_%d-%H_%M_%S")+"--jobids.pickle"
+        filepath = directory+circuit_name+'/'+circuit_name+'--'+timestamp.strftime("%m_%d-%H_%M_%S")+"--jobdata.pickle"
         data_load = pickle.load(open(filepath,"rb"))
     elif type(timestamp) == str:
-        filepath = directory+circuit_name+'/'+circuit_name+'--'+timestamp+"--jobids.pickle"
+        filepath = directory+circuit_name+'/'+circuit_name+'--'+timestamp+"--jobdata.pickle"
         data_load = pickle.load(open(filepath,"rb"))   
     return data_load
 
 def save_last(circuit_name,data,tomo_set,backend,nr_shots,nr_batches,run_type, notes=None):
     timenow = datetime.now()  
-    filepathpickle = "Experiment_data/last--jobids.pickle"
+    filepathpickle = "Experiment_data/last--jobdata.pickle"
     os.makedirs(os.path.dirname(filepathpickle), exist_ok=True)
     datadict = {'Experiment time' : timenow , 'Circuit name' : circuit_name , 
             'Type' : run_type , 'Backend' : backend , 'Data' : data , 
@@ -111,29 +111,29 @@ def save_last(circuit_name,data,tomo_set,backend,nr_shots,nr_batches,run_type, n
     fo.close
 
 def load_last():    
-    filepathpickle = "Experiment_data/last--jobids.pickle"
+    filepathpickle = "Experiment_data/last--jobdata.pickle"
     data_load = pickle.load(open(filepathpickle, 'rb'))
     return data_load
     
-    
-def save_jobs(circuit_name,run_type,backend,jobs,tomo_set,nr_shots,notes=None):
-    timenow = datetime.now()
+
+def save_results(circuit_name, timestamp,run_type,backend, jobids, tomo_set, nr_batches,nr_shots,results, notes=None):
     if run_type == 's':
         directory = 'Experiment_data/Simulation_data/'
     elif run_type == 'r':
-        directory = 'Experiment_data/Real_data/'
-    filepath = directory+circuit_name+'--'+timenow.strftime("%m_%d-%H_%M_%S")+"--jobsdata.txt"
-    os.makedirs(os.path.dirname(filepath), exist_ok=True)
-    data = {'Experiment time' : timenow , 'Circuit name' : circuit_name , 
-            'Type' : run_type , 'Backend' : backend , 'jobs' : jobs ,
-            'Tomo set' : tomo_set , 'Shot number' : nr_shots , 'Notes' : notes}
-    pickle.dump(data, open(filepath, "wb"))
+        directory = 'Experiment_data/Real_data/'    
     
-    return data
+    filepathpickle = directory+circuit_name+'/'+circuit_name+'--'+timestamp.strftime("%m_%d-%H_%M_%S")+"--results.pickle"
+    os.makedirs(os.path.dirname(filepathpickle), exist_ok=True)
 
+    datadict = {'Experiment time' : timestamp , 'Circuit name' : circuit_name , 
+            'Type' : run_type , 'Backend' : backend , 'results' : results, 
+            'Tomoset' : tomo_set , 'Shot number' : nr_shots , 'Jobids' : jobids,
+            'Batchnumber' : nr_batches , 'Notes' : notes}
+    fo = open(filepathpickle, 'wb')
+    pickle.dump(datadict, fo)
+    fo.close
 
-
-def load_jobs(circuit_name,run_type,timestamp=None):
+def load_jobdata(circuit_name,run_type,timestamp=None):
     if run_type == 's':
         directory = 'Experiment_data/Simulation_data/'
     elif run_type == 'r':

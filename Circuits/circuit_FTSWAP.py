@@ -5,6 +5,7 @@ Created on Tue Aug 14 16:02:12 2018
 @author: Jarnd
 """
 from qiskit import QuantumProgram
+import numpy as np
 # Creating program
 Q_program = QuantumProgram()
 
@@ -56,4 +57,5 @@ qc.h(q[2])
 qc.cx(q[2], q[1])
 
 ###############################################################################
-# Define 
+# Define perfect Unitary
+Unitary = np.array([[1, 0, 0, 0],[0, 0, 1, 0],[0, 1, 0, 0],[0, 0, 0, 1]])

@@ -47,7 +47,7 @@ circuit_name = Q_program.get_circuit_names()[0]
 
 ###############################################################################
 # Set number of shots, timeout, measurement- and preperation basis and backend
-shots = 200 # #shots for every circuit
+shots = 2000 # #shots for every circuit
 #timeout = 500000 # timeout in seconds before execution halts. This is the per-batch timeout, so total runtime <500*(nr_batches+1) seconds
 backendsim = 'ibmq_qasm_simulator' # The backend to use in the simulations. Check available_backends() for all backends
 backendreal = 'ibmqx4' # The backed to use for the actual experiments (e.g. the chip)
@@ -93,5 +93,5 @@ for i in range(nr_batches):
         print('Batch %d/%d: %s' % (i+1, nr_batches, 'SENT'))
 
 ###############################################################################
-store.save_jobids(circuit_name,job_data,tomo_set,backendname,shots,nr_batches,run_type)
+store.save_jobdata(circuit_name,job_data,tomo_set,backendname,shots,nr_batches,run_type)
 store.save_last(circuit_name,job_data,tomo_set,backendname,shots,nr_batches,run_type)
