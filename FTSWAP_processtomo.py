@@ -24,7 +24,7 @@ import Functions.Create_tomo_circuits as tomo
 
 ###############################################################################
 # Simulation or real experimemt? 's' for simulation, 'r' for real
-run_type = 'r'
+run_type = 's'
 reg = True #Set to true to register at IBM
 
 notes = ''#Optional notes to be stored in the datafile
