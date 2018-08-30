@@ -31,6 +31,20 @@ def get_results_from_jobids(jobids,run_type):
             results += job.result()
     return results
 
+
+def get_calibration_from_jobids(jobids):
+    nr_batches = len(jobids)
+    calibrations = [None]*nr_batches
+    for i in range(nr_batches):
+        jobinfo = api.get_job(jobids[i])
+        if not jobinfo['status'] == 'COMPLETED':
+            print('Job with batchnr %d/%d not done yet (id=%s )\n' %(i+1,nr_batches,jobids[i]))
+            calibrations = None
+            break
+        calibrations[i] = jobinfo['calibration']
+    return calibrations
+
+
 def cancel_jobs_from_jobids(jobids):
     nr_batches = len(jobids)
     for i in range(nr_batches):
@@ -45,6 +59,7 @@ def cancel_jobs_from_jobids(jobids):
         if not jobcancel:
             print('Job with id=%s cannot be cancelled)\n' %(jobids[i]))
 
+    
 def get_tomoset_from_file(direct, circuit_name = None, run_type = None, timestamp = None):
     if direct == True:
         loaded_jobiddata = store.load_last()
@@ -56,11 +71,12 @@ def get_tomoset_from_file(direct, circuit_name = None, run_type = None, timestam
         if timestamp == None:
             date = input('Date of experiment (mm_dd):')
             time = input('Time of experiment (hh_mm_ss):')
-            loaded_jobiddata = store.load_jobids(circuit_name, run_type,date+'-'+time)
+            loaded_jobiddata = store.load_jobdata(circuit_name, run_type,date+'-'+time)
         else:
-            loaded_jobiddata = store.load_jobids(circuit_name, run_type,timestamp)
+            loaded_jobiddata = store.load_jobdata(circuit_name, run_type,timestamp)
     return loaded_jobiddata['tomoset']
-    
+
+  
 def get_jobids_from_file(direct, circuit_name = None, run_type = None, timestamp = None):
     if direct == True:
         loaded_jobiddata = store.load_last()
@@ -72,9 +88,9 @@ def get_jobids_from_file(direct, circuit_name = None, run_type = None, timestamp
         if timestamp == None:
             date = input('Date of experiment (mm_dd):')
             time = input('Time of experiment (hh_mm_ss):')
-            loaded_jobiddata = store.load_jobids(circuit_name, run_type,date+'-'+time)
+            loaded_jobiddata = store.load_jobdata(circuit_name, run_type,date+'-'+time)
         else:
-            loaded_jobiddata = store.load_jobids(circuit_name, run_type,timestamp)   
+            loaded_jobiddata = store.load_jobdata(circuit_name, run_type,timestamp)   
     nr_batches = loaded_jobiddata['Batchnumber'];
     jobids = ['']*nr_batches
     for job in loaded_jobiddata['Data']:

@@ -7,6 +7,7 @@ Created on Tue Aug 14 15:22:48 2018
 import qiskit.tools.qcvv.tomography as tomo
 from qiskit.tools.qi.qi import outer, vectorize, state_fidelity
 from qiskit.tools.visualization import plot_state
+from Functions.Create_tomo_circuits import *
 
 def fit_tomodata(tomo_data,method=None):
     if method == 'Linear inversion':

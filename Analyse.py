@@ -9,15 +9,15 @@ import Analysis.Analysis as an
 import Functions.results_gathering as rg
 from qiskit.tools.visualization import plot_state
 
+
 direct = False
 run_type = 'r'
 
 fit_method = 'leastsq'
 circuit_name = 'FTSWAP'
 
-
-
-
+if direct:
+    run_type = rg.store.load_last()['Type']
 
 
 [jobids, jobdata] = rg.get_jobids_from_file(direct,circuit_name,run_type)
@@ -26,8 +26,9 @@ tomo_set = jobdata['Tomoset']
 
 if 'RUNNING' not in stati:
     results = rg.get_results_from_jobids(jobids,run_type)
+    calibrations = rg.get_calibration_from_jobids(jobids)
     rg.store.save_results(circuit_name, jobdata['Experiment time'],jobdata['Type'],jobdata['Backend'],jobids,
-                          tomo_set,jobdata['Batchnumber'],jobdata['Shot number'],results, notes=None)
+                          tomo_set,jobdata['Batchnumber'],jobdata['Shot number'],results, calibrations, notes=None)
     tomo_data = an.tomo.tomography_data(results,circuit_name,tomo_set)
     choi_fit = an.fit_tomodata(tomo_data)
 
