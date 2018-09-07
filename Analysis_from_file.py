@@ -8,11 +8,12 @@ Created on Thu Aug 30 14:55:31 2018
 #import sys
 #sys.path.append('../')
 
-import Functions.results_gathering as rg
 import Functions.Data_storage as store
+import Analysis.Analysis as an
+from qiskit.tools.visualization import plot_state
 
 run_type = 'r'
-fit_method = 'leastsq'
+fit_method = 'magic'
 circuit_name = 'FTSWAP'
 
 timestamp = None;
@@ -26,16 +27,12 @@ results_loaded = store.load_results(circuit_name,run_type, timestamp)
 
 
 
+#%%
+tomo_set = results_loaded['Tomoset']
 
-#
-#stati = rg.get_status_from_jobids(jobids,printing=True)
-#tomo_set = jobdata['Tomoset']
-#
-#if 'RUNNING' not in stati:
-#    results = rg.get_results_from_jobids(jobids,run_type)
-#    rg.store.save_results(circuit_name, jobdata['Experiment time'],jobdata['Type'],jobdata['Backend'],jobids,
-#                          tomo_set,jobdata['Batchnumber'],jobdata['Shot number'],results, notes=None)
-#    tomo_data = an.tomo.tomography_data(results,circuit_name,tomo_set)
-#    choi_fit = an.fit_tomodata(tomo_data)
-#
-#    plot_state(choi_fit)
+
+results = results_loaded['Results']
+tomo_data = an.tomo.tomography_data(results,circuit_name,tomo_set)
+choi_fit = an.fit_tomodata(tomo_data)
+
+plot_state(choi_fit)

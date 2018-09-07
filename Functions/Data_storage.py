@@ -129,7 +129,7 @@ def save_results(circuit_name, timestamp,run_type,backend, jobids, tomo_set, nr_
     filepathpickle = directory+circuit_name+'/'+circuit_name+'--'+timestamp.strftime("%m_%d-%H_%M_%S")+"--results.pickle"
     os.makedirs(os.path.dirname(filepathpickle), exist_ok=True)
     datadict = {'Experiment time' : timestamp , 'Circuit name' : circuit_name , 
-            'Type' : run_type , 'Backend' : backend , 'results' : results, 
+            'Type' : run_type , 'Backend' : backend , 'Results' : results, 
             'Tomoset' : tomo_set , 'Shot number' : nr_shots , 'Jobids' : jobids,
             'Batchnumber' : nr_batches , 'Calibration' : calibrationdata ,
             'Notes' : notes}

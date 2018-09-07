@@ -7,20 +7,14 @@ Created on Wed Aug 22 17:35:02 2018
 
 from IBMQuantumExperience import IBMQuantumExperience as IBMQ
 
-from qiskit.backends.ibmq.ibmqjob import IBMQJob
 import IBM_Q_Experience.Qconfig as Qconfig
 api = IBMQ(Qconfig.APItoken, Qconfig.config)
 import Functions.Data_storage as store
 
-def get_results_from_jobids(jobids,run_type):
-    if run_type == 's':
-        chip = False
-    elif run_type == 'r':
-        chip = True
+def get_results_from_jobids(jobids, backend):
     nr_batches = len(jobids)
     for i in range(nr_batches):
-        jobinfo = api.get_job(jobids[i])
-        job = IBMQJob.from_api(jobinfo, api, chip)
+        job = backend.retrieve_job(jobids[i])
         if not job.done:
             print('Job with batchnr %d/%d not done yet (id=%s )\n' %(i+1,nr_batches,jobids[i]))
             results = None
@@ -45,11 +39,10 @@ def get_calibration_from_jobids(jobids):
     return calibrations
 
 
-def cancel_jobs_from_jobids(jobids):
+def cancel_jobs_from_jobids(jobids, backend):
     nr_batches = len(jobids)
     for i in range(nr_batches):
-        jobinfo = api.get_job(jobids[i])
-        job = IBMQJob.from_api(jobinfo, api, True)
+        job = backend.retrieve_job(jobids[i])
         if job.done:
             print('Job with id=%s already done)\n' %(jobids[i]))
             continue

@@ -13,7 +13,7 @@ the 'process_tomography.py' file.
 """
 
 # importing the QISKit
-from qiskit import register, execute, get_backend
+from qiskit import register, execute, get_backend, unregister
 
 
 
@@ -39,7 +39,7 @@ nr_batches = 6; # Tries 6 batches, if total number of circuits is not divisible 
 if reg == True:
     
     from IBM_Q_Experience.Q_Exp_register import qx_config
-    register(qx_config['APItoken'])
+    provider = register(qx_config['APItoken'])
 
 # Import Quantum program of desired circuit
 from Circuits.circuit_FTSWAP import Q_program, q, c
@@ -95,3 +95,5 @@ for i in range(nr_batches):
 ###############################################################################
 store.save_jobdata(circuit_name,job_data,tomo_set,backendname,shots,nr_batches,run_type)
 store.save_last(circuit_name,job_data,tomo_set,backendname,shots,nr_batches,run_type)
+
+unregister(provider)
