@@ -120,8 +120,8 @@ def get_A_mat(B_prep,B_meas,B_chi):
             jc += 1
         ic += 1
     return A
-
-def get_lambda_from_meas(meas_data, tomo_set,n):
+#%%
+def get_lambda_from_meas(tomo_set, meas_data, n):
     P1names = ['I','X','Y','Z']
     reworked_meas_data = rework_data(tomo_set,meas_data)
     lam = [];
@@ -129,7 +129,7 @@ def get_lambda_from_meas(meas_data, tomo_set,n):
     meas = get_pauli_list(n,P1names);
     for Pi in prep:
         for Pj in meas:
-            lam.append(get_lamij_from_PiPj(Pi,Pj,reworked_meas_data))
+            lam.append(get_lamij_from_PiPj(Pi,Pj,reworked_meas_data, n)[0])
     return lam
 
 def rework_data(tomo_set,meas_data):
@@ -139,33 +139,33 @@ def rework_data(tomo_set,meas_data):
         for j in [0,1]:
             for i in [0,1]:
                 circuitlabel = labels[ind]
-                data = meas_data[ind]['counts'][str(j)+str(i)]
+                data = (meas_data[ind]['counts'][str(j)+str(i)])/meas_data[ind]['shots']
                 updatedlabel = circuitlabel[:23]+str(j)+circuitlabel[23:27]+str(i)+circuitlabel[27:]
                 reworked_meas_data[updatedlabel] = data
     return reworked_meas_data
 
-def get_lamij_from_PiPj(Pi,Pj,reworked_meas_data):
-    lookupP = {{'X' : [1, -1, 0, 0, 0, 0] , 'Y' : [0, 0, 1, -1, 0, 0] , 'Z' : [0, 0, 0, 0, 1, -1] , 'I' : [1, 1, 1, 1, 1, 1]}}
+def get_lamij_from_PiPj(Pi,Pj,reworked_meas_data, n):
+    lookupP = {'X' : [1, -1, 0, 0, 0, 0] , 'Y' : [0, 0, 1, -1, 0, 0] , 'Z' : [0, 0, 0, 0, 1, -1] , 'I' : [1/3, 1/3, 1/3, 1/3, 1/3, 1/3]}
     namesP = ['X0','X1','Y0','Y1','Z0','Z1'];
     Pi0list = lookupP[Pi[0]] ;
     Pi1list = lookupP[Pi[1]] ;
     Pj0list = lookupP[Pj[0]] ;
     Pj1list = lookupP[Pj[1]] ;
     lamij = 0;
-    for i0 in range(5):
-        for i1 in range(5):
-            for j0 in range(5):
-                for j1 in range(5):
+    lams = []
+    circuitlabels = []
+    for i0 in range(6):
+        for i1 in range(6):
+            for j0 in range(6):
+                for j1 in range(6):
                     lam = Pi0list[i0]*Pi1list[i1]*Pj0list[j0]*Pj1list[j1]
                     circuitlabel = '_prep_'+namesP[i1]+'(1)'+namesP[i0]+'(0)_meas_'+namesP[j1]+'(1)'+namesP[j0]+'(0)';
-                    meas = reworked_meas_data[circuitlabel];
-                    lamij += lam*meas;
-    return lamij
-
-
-
-
-
+                    if lam != 0:
+                        circuitlabels.append([circuitlabel, lam])
+                        meas = reworked_meas_data[circuitlabel];
+                        lams.append(lam)
+                        lamij += (1/((2*n)**2))*lam*meas;
+    return lamij, lams, circuitlabels
 
 
 
