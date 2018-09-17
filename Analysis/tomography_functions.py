@@ -9,10 +9,24 @@ import itertools as itt
 
 n = 2
 def get_pauli_basis(n):
-    I =    np.array([[1 , 0] , [0 , 1]]) * (1/2)
-    X =    np.array([[0 , 1] , [1 , 0]]) * (1/2)
-    Y = 1j*np.array([[0 ,-1] , [1 , 0]]) * (1/2)
-    Z =    np.array([[1 , 0] , [0 ,-1]]) * (1/2)
+    I =    np.array([[1 , 0] , [0 , 1]])
+    X =    np.array([[0 , 1] , [1 , 0]])
+    Y = 1j*np.array([[0 ,-1] , [1 , 0]])
+    Z =    np.array([[1 , 0] , [0 ,-1]])
+    P1 = [I,X,Y,Z]
+    P2 = []
+    for Bde in itt.product(P1,repeat = n):
+        B = 1
+        for i in Bde:
+            B = np.kron(B,i)
+        P2.append((2**(-1*n/2))*B)
+    return P2
+
+def get_pauli_basis_unnorm(n):
+    I =    np.array([[1 , 0] , [0 , 1]])
+    X =    np.array([[0 , 1] , [1 , 0]])
+    Y = 1j*np.array([[0 ,-1] , [1 , 0]])
+    Z =    np.array([[1 , 0] , [0 ,-1]])
     P1 = [I,X,Y,Z]
     P2 = []
     for Bde in itt.product(P1,repeat = n):
@@ -164,7 +178,7 @@ def get_lamij_from_PiPj(Pi,Pj,reworked_meas_data, n):
                         circuitlabels.append([circuitlabel, lam])
                         meas = reworked_meas_data[circuitlabel];
                         lams.append(lam)
-                        lamij += (1/((2*n)**2))*lam*meas;
+                        lamij += lam*meas;
     return lamij, lams, circuitlabels
 
 

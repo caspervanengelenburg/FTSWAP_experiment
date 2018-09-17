@@ -148,9 +148,9 @@ def load_results(circuit_name, run_type, timestamp=None):
         filepath = directory+circuit_name+'/'+circuit_name+'--'+date+'-'+time+'--results.pickle'
         data_load = pickle.load(open(filepath,'rb'))
     elif type(timestamp) == datetime:
-        filepath = directory+circuit_name+'/'+circuit_name+'--'+timestamp.strftime("%m_%d-%H_%M_%S")+"--results.pickle'"
+        filepath = directory+circuit_name+'/'+circuit_name+'--'+timestamp.strftime("%m_%d-%H_%M_%S")+'--results.pickle'
         data_load = pickle.load(open(filepath,"rb"))
     elif type(timestamp) == str:
-        filepath = directory+circuit_name+'/'+circuit_name+'--'+timestamp+"--results.pickle'"
+        filepath = directory+circuit_name+'/'+circuit_name+'--'+timestamp+'--results.pickle'
         data_load = pickle.load(open(filepath,"rb"))   
     return data_load

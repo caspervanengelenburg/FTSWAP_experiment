@@ -12,6 +12,7 @@ import Functions.Data_storage as store
 import Analysis.Analysis as an
 import Analysis.tomography_functions as tomoself
 from qiskit.tools.visualization import plot_state
+import numpy as np
 
 run_type = 's'
 fit_method = 'leastsq'
@@ -19,7 +20,7 @@ circuit_name = 'FTSWAP'
 n = 2;
 
 timestamp = None;
-direct = False
+direct = True
 
 #%% Gather the results from file
 if direct == True:
@@ -44,10 +45,13 @@ chi_ownfit = an.fit_chi_own(tomo_data,tomo_set, n)
 #%% Tomography; fitting choi with qiskit functions and mapping choi to chi
 choi_qiskitfit = an.fit_tomodata(tomo_data,method = fit_method)
 
-B_chi = tomoself.get_pauli_basis(n)
+B_chi = tomoself.get_pauli_basis_unnorm(n)
 B_choi = tomoself.get_choi_basis(n, B_chi)
 chi_qiskitfit = tomoself.choi_to_chi(choi_qiskitfit,B_choi,n)
 
 #%% Plotting
 plot_state(chi_qiskitfit)
 plot_state(chi_ownfit)
+print('Trace of qiskit fit:',np.trace(chi_qiskitfit))
+print('Trace of own fit:',np.trace(chi_ownfit))
+print('Trace  of Choi qiskit fit:',np.trace(choi_qiskitfit))
