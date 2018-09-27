@@ -6,13 +6,18 @@ Created on Thu Sep  6 13:04:19 2018
 """
 import numpy as np
 import itertools as itt
+#import Analysis.Paulifunctions as Pf
+import Paulifunctions as Pf
+import time
+
+#%%
 
 n = 2
 def get_pauli_basis(n):
-    I =    np.array([[1 , 0] , [0 , 1]])
-    X =    np.array([[0 , 1] , [1 , 0]])
-    Y = 1j*np.array([[0 ,-1] , [1 , 0]])
-    Z =    np.array([[1 , 0] , [0 ,-1]])
+    I =    np.mat([[1 , 0] , [0 , 1]])
+    X =    np.mat([[0 , 1] , [1 , 0]])
+    Y = 1j*np.mat([[0 ,-1] , [1 , 0]])
+    Z =    np.mat([[1 , 0] , [0 ,-1]])
     P1 = [I,X,Y,Z]
     P2 = []
     for Bde in itt.product(P1,repeat = n):
@@ -23,10 +28,10 @@ def get_pauli_basis(n):
     return P2
 
 def get_pauli_basis_unnorm(n):
-    I =    np.array([[1 , 0] , [0 , 1]])
-    X =    np.array([[0 , 1] , [1 , 0]])
-    Y = 1j*np.array([[0 ,-1] , [1 , 0]])
-    Z =    np.array([[1 , 0] , [0 ,-1]])
+    I =    np.mat([[1 , 0] , [0 , 1]])
+    X =    np.mat([[0 , 1] , [1 , 0]])
+    Y = 1j*np.mat([[0 ,-1] , [1 , 0]])
+    Z =    np.mat([[1 , 0] , [0 ,-1]])
     P1 = [I,X,Y,Z]
     P2 = []
     for Bde in itt.product(P1,repeat = n):
@@ -37,10 +42,10 @@ def get_pauli_basis_unnorm(n):
     return P2
 
 def get_canonical_basis(n):
-    E00 = np.array([[1 , 0] , [0 , 0]]);
-    E01 = np.array([[0 , 1] , [0 , 0]]);
-    E10 = np.array([[0 , 0] , [1 , 0]]);
-    E11 = np.array([[0 , 0] , [0 , 1]]);
+    E00 = np.mat([[1 , 0] , [0 , 0]]);
+    E01 = np.mat([[0 , 1] , [0 , 0]]);
+    E10 = np.mat([[0 , 0] , [1 , 0]]);
+    E11 = np.mat([[0 , 0] , [0 , 1]]);
     E1 = [E00,E01,E10,E11]
     E2 = []
     for Bde in itt.product(E1,repeat = n):
@@ -87,15 +92,16 @@ def unitary_to_choi(U):
     return vect @ vect.T
 
 def choi_to_chi(choi,B_choi,n):
+    choi = np.mat(choi)
     chi = np.zeros(np.shape(choi),dtype='complex')
-    for combi in itt.product(range((2*n)**2), repeat = 2):
-        chi[combi] = complex(B_choi[combi[0]].T @ choi @ B_choi[combi[1]])
-    return chi
+    for combi in itt.product(range((2**n)**2), repeat = 2):
+        chi[combi] = complex(B_choi[combi[0]].H @ choi @ B_choi[combi[1]])
+    return ((2**n)**2)*chi
 
-def chi_to_choi(chi,B_choi):
+def chi_to_choi(chi,B_choi,n):
     choi = np.zeros(np.shape(chi),dtype='complex');
-    for combi in itt.product(range((2*n)**2), repeat = 2):
-        choi += chi[combi] * B_choi[combi[0]] @ B_choi[combi[1]].T
+    for combi in itt.product(range((2**n)**2), repeat = 2):
+        choi += chi[combi] * B_choi[combi[0]] @ B_choi[combi[1]].H
     return choi
 
 #%%
@@ -106,14 +112,52 @@ def get_pauli_list(n,P1names):
             Pauli_list.append([P1names[i],P1names[j]])
     return Pauli_list
 
+def get_pauli_names(n):
+    p1names = ['I','X','Y','Z']
+    pnames = []
+    for p in itt.product(p1names, repeat = n):
+        pnames.append(p[0]+p[1])
+    return pnames
+
 def get_string_from_prepmeas(prep_paulis,eigP0,eigP1,meas_paulis):
     prep = prep_paulis[1]+str(eigP1)+'(1)'+prep_paulis[0]+str(eigP0)+'(0)'
     meas = meas_paulis[1]+'(1)'+meas_paulis[0]+'(0)'
     label = '_prep_'+prep+'_meas_'+meas
     return label
 
-    
+def get_A_mat_fast(nq):
+    indices = [0,1,2,3]
+    d4 = (2**nq)**2
+    A = np.zeros((d4**2,d4**2),dtype = 'complex')
+    i = 0;
+    for Bi in itt.product(indices,repeat=nq):
+        j = 0;
+        for Bj in itt.product(indices, repeat = nq):
+            m = 0;
+            for Bm in itt.product(indices, repeat = nq):
+                n = 0;
+                for Bn in itt.product(indices, repeat = nq):
+                    A[j+i*d4,n+m*d4] = Pf.calc_trace_P2prod([Bj,Bm,Bi,Bn])
+                    n += 1;
+                m += 1;
+            j += 1;
+        i += 1;
+    return A
+
+def get_A_mat_faster(nq):
+    timebefore = time.time()
+    indices = [0,1,2,3]
+    row = []
+    for Bs in itt.product(indices, repeat = nq*4):
+        trace = Pf.calc_trace_P2prod([Bs[2:4],Bs[4:6],Bs[0:2],Bs[6:8]])
+        row.append(trace)
+    A = np.reshape(np.array(row),((2**nq)**4,(2**nq)**4))
+    timeafter = time.time()
+    print(timeafter-timebefore)
+    return A
+        
 def get_A_mat(B_prep,B_meas,B_chi):
+    timebefore = time.time()
     ic = 0;
     jc = 0;
     mc = 0;
@@ -133,18 +177,22 @@ def get_A_mat(B_prep,B_meas,B_chi):
                 mc += 1
             jc += 1
         ic += 1
+    timeafter = time.time()
+    print(timeafter-timebefore)
     return A
 #%%
 def get_lambda_from_meas(tomo_set, meas_data, n):
     P1names = ['I','X','Y','Z']
     reworked_meas_data = rework_data(tomo_set,meas_data)
     lam = [];
+    lampau = [];
     prep = get_pauli_list(n,P1names);
     meas = get_pauli_list(n,P1names);
     for Pi in prep:
         for Pj in meas:
             lam.append(get_lamij_from_PiPj(Pi,Pj,reworked_meas_data, n)[0])
-    return lam
+            lampau.append([Pi,Pj])
+    return lam, lampau
 
 def rework_data(tomo_set,meas_data):
     reworked_meas_data = dict()

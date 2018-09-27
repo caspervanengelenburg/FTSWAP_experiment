@@ -24,7 +24,7 @@ import Functions.Create_tomo_circuits as tomo
 
 ###############################################################################
 # Simulation or real experimemt? 's' for simulation, 'r' for real
-run_type = 'r'
+run_type = 's'
 reg = True #Set to true to register at IBM
 
 notes = ''#Optional notes to be stored in the datafile
@@ -42,12 +42,12 @@ if reg == True:
     provider = register(qx_config['APItoken'])
 
 # Import Quantum program of desired circuit
-from Circuits.circuit_FTSWAP import Q_program, q, c, Unitary
+from Circuits.circuit_NFTSWAP import Q_program, q, c, Unitary
 circuit_name = Q_program.get_circuit_names()[0]
 
 ###############################################################################
 # Set number of shots, timeout, measurement- and preperation basis and backend
-shots = 9000 # #shots for every circuit
+shots = 8000 # #shots for every circuit
 #timeout = 500000 # timeout in seconds before execution halts. This is the per-batch timeout, so total runtime <500*(nr_batches+1) seconds
 backendsim = 'ibmq_qasm_simulator' # The backend to use in the simulations. Check available_backends() for all backends
 backendreal = 'ibmqx4' # The backed to use for the actual experiments (e.g. the chip)

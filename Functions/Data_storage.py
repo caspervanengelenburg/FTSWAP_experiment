@@ -47,7 +47,7 @@ def load_tomo_data(circuit_name,run_type,timestamp=None):
 
 
 ###############################################################################        
-def save_jobdata(circuit_name,jobs_data,tomo_set,backend,nr_shots,nr_batches,run_type, notes=None):
+def save_jobdata(circuit_name,jobs_data,tomo_set,backend,nr_shots,nr_batches,run_type, unitary, notes=None):
     timenow = datetime.now()
     if run_type == 's':
         directory = 'Experiment_data/Simulation_data/'
@@ -73,7 +73,7 @@ def save_jobdata(circuit_name,jobs_data,tomo_set,backend,nr_shots,nr_batches,run
     datadict = {'Experiment time' : timenow , 'Circuit name' : circuit_name , 
             'Type' : run_type , 'Backend' : backend , 'Data' : jobs_data , 
             'Tomoset' : tomo_set , 'Shot number' : nr_shots , 
-            'Batchnumber' : nr_batches , 'Notes' : notes}
+            'Unitary' : unitary , 'Batchnumber' : nr_batches , 'Notes' : notes}
     fo = open(filepathpickle, 'wb')
     pickle.dump(datadict, fo)
     fo.close
@@ -102,14 +102,14 @@ def load_jobdata(circuit_name, run_type, timestamp=None):
 
 
 ###############################################################################
-def save_last(circuit_name,data,tomo_set,backend,nr_shots,nr_batches,run_type, notes=None):
+def save_last(circuit_name,data,tomo_set,backend,nr_shots,nr_batches,run_type, unitary, notes=None):
     timenow = datetime.now()  
     filepathpickle = "Experiment_data/last--jobdata.pickle"
     os.makedirs(os.path.dirname(filepathpickle), exist_ok=True)
     datadict = {'Experiment time' : timenow , 'Circuit name' : circuit_name , 
             'Type' : run_type , 'Backend' : backend , 'Data' : data , 
-            'Tomoset' : tomo_set , 'Shot number' : nr_shots , 
-            'Batchnumber' : nr_batches , 'Notes' : notes}
+            'Tomoset' : tomo_set , 'Shot number' : nr_shots ,
+            'Unitary' : unitary , 'Batchnumber' : nr_batches , 'Notes' : notes}
     fo = open(filepathpickle, 'wb')
     pickle.dump(datadict, fo)
     fo.close
@@ -120,7 +120,7 @@ def load_last():
     return data_load
     
 ###############################################################################
-def save_results(circuit_name, timestamp,run_type,backend, jobids, tomo_set, nr_batches,nr_shots,results, calibrationdata, notes=None):
+def save_results(circuit_name, timestamp,run_type,backend, jobids, tomo_set, nr_batches,nr_shots,results, unitary, calibrationdata, notes=None):
     if run_type == 's':
         directory = 'Experiment_data/Simulation_data/'
     elif run_type == 'r':
@@ -132,7 +132,7 @@ def save_results(circuit_name, timestamp,run_type,backend, jobids, tomo_set, nr_
             'Type' : run_type , 'Backend' : backend , 'Results' : results, 
             'Tomoset' : tomo_set , 'Shot number' : nr_shots , 'Jobids' : jobids,
             'Batchnumber' : nr_batches , 'Calibration' : calibrationdata ,
-            'Notes' : notes}
+            'Unitary' : unitary , 'Notes' : notes}
     fo = open(filepathpickle, 'wb')
     pickle.dump(datadict, fo)
     fo.close
