@@ -4,9 +4,6 @@ Created on Wed Sep 26 16:59:16 2018
 
 @author: Jarnd
 """
-from sympy.functions.special.tensor_functions import eval_levicivita as levi
-from sympy.functions.special.tensor_functions import KroneckerDelta as kron
-
 def calc_trace_P1prod(indices):
     '''
     Calculates the trace of 4 normalized paulis (including identity) with indices in a list.
@@ -46,3 +43,14 @@ def calc_trace_P2prod(paulilist):
     trace0 = calc_trace_P1prod(indices0)
     trace1 = calc_trace_P1prod(indices1)
     return trace0*trace1
+
+def kron(a,b):
+    if a == b:
+        return 1
+    else:
+        return 0
+
+def levi(a,b,c):
+    if a+b+c == 6:
+        return ((b-a)%3)*(-2) + 3
+    else: return 0

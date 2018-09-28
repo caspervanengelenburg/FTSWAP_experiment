@@ -6,13 +6,9 @@ Created on Thu Sep  6 13:04:19 2018
 """
 import numpy as np
 import itertools as itt
-#import Analysis.Paulifunctions as Pf
-import Paulifunctions as Pf
-import time
+import Analysis.Paulifunctions as pf
 
 #%%
-
-n = 2
 def get_pauli_basis(n):
     I =    np.mat([[1 , 0] , [0 , 1]])
     X =    np.mat([[0 , 1] , [1 , 0]])
@@ -86,7 +82,7 @@ def get_choi_basis(n, chi_bas):
         B_choi.append(np.kron(P,np.kron(I,I))@psi_ome)
     return B_choi
 
-#%%
+#%% Mapping functions
 def unitary_to_choi(U):
     vect = np.mat(np.reshape(U,(-1,1)))
     return vect @ vect.T
@@ -137,7 +133,7 @@ def get_A_mat_fast(nq):
             for Bm in itt.product(indices, repeat = nq):
                 n = 0;
                 for Bn in itt.product(indices, repeat = nq):
-                    A[j+i*d4,n+m*d4] = Pf.calc_trace_P2prod([Bj,Bm,Bi,Bn])
+                    A[j+i*d4,n+m*d4] = pf.calc_trace_P2prod([Bj,Bm,Bi,Bn])
                     n += 1;
                 m += 1;
             j += 1;
@@ -145,19 +141,17 @@ def get_A_mat_fast(nq):
     return A
 
 def get_A_mat_faster(nq):
-    timebefore = time.time()
     indices = [0,1,2,3]
-    row = []
+    d = 2**nq
+    row = np.empty((d**8,1),dtype='complex')
+    i = 0;
     for Bs in itt.product(indices, repeat = nq*4):
-        trace = Pf.calc_trace_P2prod([Bs[2:4],Bs[4:6],Bs[0:2],Bs[6:8]])
-        row.append(trace)
-    A = np.reshape(np.array(row),((2**nq)**4,(2**nq)**4))
-    timeafter = time.time()
-    print(timeafter-timebefore)
+        row[i] = pf.calc_trace_P2prod([Bs[2:4],Bs[4:6],Bs[0:2],Bs[6:8]])
+        i+=1
+    A = np.reshape(row,((d)**4,(d)**4))
     return A
         
 def get_A_mat(B_prep,B_meas,B_chi):
-    timebefore = time.time()
     ic = 0;
     jc = 0;
     mc = 0;
@@ -177,8 +171,6 @@ def get_A_mat(B_prep,B_meas,B_chi):
                 mc += 1
             jc += 1
         ic += 1
-    timeafter = time.time()
-    print(timeafter-timebefore)
     return A
 #%%
 def get_lambda_from_meas(tomo_set, meas_data, n):
@@ -228,13 +220,3 @@ def get_lamij_from_PiPj(Pi,Pj,reworked_meas_data, n):
                         lams.append(lam)
                         lamij += lam*meas;
     return lamij, lams, circuitlabels
-
-
-
-
-
-
-
-
-
-

@@ -154,3 +154,41 @@ def load_results(circuit_name, run_type, timestamp=None):
         filepath = directory+circuit_name+'/'+circuit_name+'--'+timestamp+'--results.pickle'
         data_load = pickle.load(open(filepath,"rb"))   
     return data_load
+
+###############################################################################
+def save_chi_meas(chi_meas, timestamp = None, Bfilter = None):
+    directory = 'Experiment_data/Real_data/Id/Id'
+    if timestamp == None:
+        date = input('Date of experiment (mm_dd):')
+        time = input('Time of experiment (hh_mm_ss):')
+        filepath = directory+'--'+date+'-'+time+'--chimeas.pickle'
+    elif type(timestamp) == datetime:
+        filepath = directory+'--'+timestamp.strftime("%m_%d-%H_%M_%S")+'--chimeas.pickle'
+    elif type(timestamp) == str:
+        filepath = directory+'--'+timestamp+'--results.pickle'
+    datadict = {'chi_meas' : chi_meas , 'B_filter' : Bfilter}
+    fo = open(filepath, 'wb')
+    pickle.dump(datadict,fo)
+    fo.close
+
+def load_chi_meas(timestamp = None):
+    directory = 'Experiment_data/Real_data/Id/Id'
+    if timestamp == None:
+        date = input('Date of experiment (mm_dd):')
+        time = input('Time of experiment (hh_mm_ss):')
+        filepath = directory+'--'+date+'-'+time+'--chimeas.pickle'
+    elif type(timestamp) == datetime:
+        filepath = directory+'--'+timestamp.strftime("%m_%d-%H_%M_%S")+'--chimeas.pickle'
+    elif type(timestamp) == str:
+        filepath = directory+'--'+timestamp+'--results.pickle'
+    return pickle.load(open(filepath, 'rb'))
+
+def save_chi_meas_last(chi_meas, Bfilter = None):
+    filepath = 'Experiment_data/Real_data/Id/chi_last.pickle'
+    datadict = {'chi_meas' : chi_meas , 'B_filter' : Bfilter}
+    fo = open(filepath, 'wb')
+    pickle.dump(datadict,fo)
+    fo.close
+
+def load_chi_meas_last():
+    return pickle.load(open('Experiment_data/Real_data/Id/chi_last.pickle', 'rb'))
