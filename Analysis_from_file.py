@@ -19,7 +19,7 @@ fit_method = 'own'
 n = 2;
 
 
-direct = False
+direct = True
 
 #%% Gather the results from file
 if direct == True:
@@ -68,20 +68,23 @@ choi_filtered = tomoself.chi_to_choi(chi_filtered,B_choi,n)
 
 #%% Calculate error matrices
 chi_perror = an.get_chi_error(chi_filtered,B_chi,results_loaded['Unitary'])
+chi_unfiltered_perror = an.get_chi_error(chi,B_chi,results_loaded['Unitary'])
 #chi_perror_before_filter = an.get_chi_error(chi, B_chi, results_loaded['Unitary'])
 print('Tp:', an.check_TP(chi_filtered,B_chi,n))
 
 #%% Calculated traces and fidelities
 process_fidelity = chi_perror[0,0]/(2**n)
-channel_fidelity = tomoself.get_max_ent_2n(n).T @ choi_filtered @ tomoself.get_max_ent_2n(n)
+process_fidelity_unfiltered = chi_unfiltered_perror[0,0]/(2**n)
+channel_fidelity = (2**n)*tomoself.get_max_ent_2n(n).T @ choi_filtered @ tomoself.get_max_ent_2n(n)
 
 print('Trace of filtered Chi:',np.trace(chi_filtered))
 print('Trace of filtered Choi:',np.trace(choi_filtered))
 print('Trace of error Chi :',np.trace(chi_perror))
 
 print('Process fidelity from error matrix:',np.abs(process_fidelity))
+print('Process fidelity from unfiltered error matrix:',np.abs(process_fidelity_unfiltered))
 print('Channel fidelity from Choi matrix:',np.float(np.abs(channel_fidelity)))
 
 #%% Plotting
-pt.plot_city(chi_filtered,tomoself.get_pauli_names(n)) 
-pt.plot_city(chi_perror,tomoself.get_pauli_names(n))
+pt.plot_city(chi_filtered,tomoself.get_pauli_names(n),'$\chi_{filtered}$') 
+pt.plot_city(chi_perror,tomoself.get_pauli_names(n),'$\chi_{error}$')

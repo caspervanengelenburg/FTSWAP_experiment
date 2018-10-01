@@ -28,7 +28,7 @@ run_type = 'r'
 reg = True #Set to true to register at IBM
 
 notes = ''#Optional notes to be stored in the datafile
-maximum_credits = 8; # Maximum number of credits
+maximum_credits = 15; # Maximum number of credits
 
 
 nr_batches = 4; # Tries that nr of batches, if total number of circuits is not divisible adds one extra batch with the leftovers
@@ -47,7 +47,7 @@ circuit_name = Q_program.get_circuit_names()[0]
 
 ###############################################################################
 # Set number of shots, timeout, measurement- and preperation basis and backend
-shots = 9000 # #shots for every circuit
+shots = 8000 # #shots for every circuit
 #timeout = 500000 # timeout in seconds before execution halts. This is the per-batch timeout, so total runtime <500*(nr_batches+1) seconds
 backendsim = 'ibmq_qasm_simulator' # The backend to use in the simulations. Check available_backends() for all backends
 backendreal = 'ibmqx4' # The backed to use for the actual experiments (e.g. the chip)

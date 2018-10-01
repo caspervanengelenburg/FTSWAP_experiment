@@ -15,7 +15,7 @@ provider = register(qx_config['APItoken'])
 
 #%%
 #fit_method = 'leastsq'
-direct = False
+direct = True
 if direct:
     run_type = rg.store.load_last()['Type']
     circuit_name = rg.store.load_last()['Circuit name']
