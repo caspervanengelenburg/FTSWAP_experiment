@@ -5,6 +5,8 @@ Created on Wed Aug 15 08:59:49 2018
 @author: Jarnd
 """
 
+
+#%%
 import Functions.results_gathering as rg
 from qiskit import register, unregister, get_backend
 

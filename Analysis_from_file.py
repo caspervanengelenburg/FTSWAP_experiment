@@ -5,11 +5,9 @@ Created on Thu Aug 30 14:55:31 2018
 @author: Jarnd
 """
 
-#import sys
-# sys.path.append('../')
 
 import Functions.Data_storage as store
-import Analysis.Analysis as an
+import Analysis.Analysefunc as an
 import Analysis.tomography_functions as tomoself
 import Functions.Plotting as pt
 import numpy as np
@@ -19,7 +17,7 @@ fit_method = 'own'
 n = 2
 
 
-direct = True
+direct = False
 
 #%% Gather the results from file
 if direct == True:

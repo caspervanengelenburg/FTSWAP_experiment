@@ -4,7 +4,7 @@ Created on Fri Aug  3 15:01:21 2018
 
 @author: Jarnd
 """
-
+print('\033[H\033[J')
 
 """
 This code was inspired/based on the qiskit tutorials provided by IBM, available
@@ -45,7 +45,7 @@ circuit_name = Q_program.get_circuit_names()[0]
 
 ###############################################################################
 # Set number of shots, timeout, measurement- and preperation basis and backend
-shots = 8000  # shots for every circuit
+shots = 8192  # shots for every circuit
 # timeout = 500000 # timeout in seconds before execution halts. This is the per-batch timeout, so total runtime <500*(nr_batches+1) seconds
 # The backend to use in the simulations. Check available_backends() for all backends
 backendsim = 'ibmq_qasm_simulator'
