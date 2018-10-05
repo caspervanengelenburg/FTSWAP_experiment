@@ -23,8 +23,8 @@ def fit_tomodata(tomo_data, method=None):
 
 def fit_chi_own(tomo_data, tomo_set, n):
     B_chi = tomoself.get_pauli_basis(n)
-    B_prep = tomoself.get_pauli_basis_unnorm(n)
-    B_meas = tomoself.get_pauli_basis_unnorm(n)
+    B_prep = tomoself.get_pauli_basis(n, normalise=False)
+    B_meas = tomoself.get_pauli_basis(n, normalise=False)
 
     lam, lampau = tomoself.get_lambda_from_meas(tomo_set, tomo_data['data'], n)
 

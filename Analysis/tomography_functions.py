@@ -4,44 +4,32 @@ Created on Thu Sep  6 13:04:19 2018
 
 @author: Jarnd
 """
+from functools import reduce
 import numpy as np
 import itertools as itt
 import Analysis.Paulifunctions as pf
 
 #%%
 
+sq2 = np.sqrt(2)
 
-def get_pauli_basis(n):
+I = np.mat([[1, 0], [0, 1]])
+X = np.mat([[0, 1], [1, 0]])
+Y = 1j*np.mat([[0, -1], [1, 0]])
+Z = np.mat([[1, 0], [0, -1]])
+
+paulis_1 = [I, X, Y, Z]
+
+def get_pauli_basis(n, normalise=True):
     """
     Lists the Pauli matrices that form a basis for the space of
     operators on `n` qubits.
     """
-    I = np.mat([[1, 0], [0, 1]])
-    X = np.mat([[0, 1], [1, 0]])
-    Y = 1j*np.mat([[0, -1], [1, 0]])
-    Z = np.mat([[1, 0], [0, -1]])
-    P1 = [I, X, Y, Z]
+    basis = [_ / sq2 for _ in paulis_1] if normalise else paulis_1
+    
     P2 = []
-    for Bde in itt.product(P1, repeat=n):
-        B = 1
-        for i in Bde:
-            B = np.kron(B, i)
-        P2.append((2**(-1*n/2))*B)
-    return P2
-
-
-def get_pauli_basis_unnorm(n):
-    I = np.mat([[1, 0], [0, 1]])
-    X = np.mat([[0, 1], [1, 0]])
-    Y = 1j*np.mat([[0, -1], [1, 0]])
-    Z = np.mat([[1, 0], [0, -1]])
-    P1 = [I, X, Y, Z]
-    P2 = []
-    for Bde in itt.product(P1, repeat=n):
-        B = 1
-        for i in Bde:
-            B = np.kron(B, i)
-        P2.append(B)
+    for Bde in itt.product(basis, repeat=n):
+        P2.append(reduce(np.kron, Bde))
     return P2
 
 
