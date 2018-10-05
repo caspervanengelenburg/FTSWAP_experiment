@@ -5,8 +5,10 @@ Created on Thu Sep  6 13:04:19 2018
 @author: Jarnd
 """
 from functools import reduce
-import numpy as np
 import itertools as itt
+import numpy as np
+import operator as op
+
 import Analysis.Paulifunctions as pf
 
 #%%
@@ -96,38 +98,35 @@ def choi_to_chi(choi, B_choi, n):
     chi = np.zeros(np.shape(choi), dtype='complex')
     for combi in itt.product(range(4**n), repeat=2):
         chi[combi] = complex(B_choi[combi[0]].H @ choi @ B_choi[combi[1]])
-    return 4**n*chi
+    chi /= np.trace(chi)
+    return 2**n*chi # ensure chi matrix is trace-D
 
 
 def chi_to_choi(chi, B_choi, n):
     choi = np.zeros(np.shape(chi), dtype='complex')
     for combi in itt.product(range(4**n), repeat=2):
         choi += chi[combi] * B_choi[combi[0]] @ B_choi[combi[1]].H
-    return choi / np.trace(chi) # ensure choi matrix is trace 1
+    return choi / np.trace(chi) # ensure choi matrix is trace-1
 
 #%%
 
 
 def get_pauli_list(n, P1names):
-    Pauli_list = []
-    for i in range((2*n)):
-        for j in range((2*n)):
-            Pauli_list.append([P1names[i], P1names[j]])
-    return Pauli_list
+    return list(itt.product(P1names, repeat=n))
 
 
 def get_pauli_names(n):
     p1names = ['I', 'X', 'Y', 'Z']
     pnames = []
     for p in itt.product(p1names, repeat=n):
-        pnames.append(p[0]+p[1])
+        pnames.append(reduce(op.add, p))
     return pnames
 
 
 def get_string_from_prepmeas(prep_paulis, eigP0, eigP1, meas_paulis):
-    prep = prep_paulis[1]+str(eigP1)+'(1)'+prep_paulis[0]+str(eigP0)+'(0)'
-    meas = meas_paulis[1]+'(1)'+meas_paulis[0]+'(0)'
-    label = '_prep_'+prep+'_meas_'+meas
+    prep = prep_paulis[1] + str(eigP1) + '(1)' + prep_paulis[0] + str(eigP0) + '(0)'
+    meas = meas_paulis[1] + '(1)' + meas_paulis[0] + '(0)'
+    label = '_prep_' + prep + '_meas_' + meas
     return label
 
 
@@ -177,8 +176,9 @@ def get_A_mat(B_prep, B_meas, B_chi):
             mc = 0
             for m in B_chi:
                 nc = 0
+                jmi = j @ m @ i
                 for n in B_chi:
-                    A[jc+(ic*jctot), nc+(mc*nctot)] = np.trace(j@m@i@np.mat(n).H)
+                    A[jc+(ic*jctot), nc+(mc*nctot)] = np.trace(jmi @ np.mat(n).H)
                     nc += 1
                 mc += 1
             jc += 1
