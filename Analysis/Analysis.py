@@ -30,7 +30,8 @@ def fit_chi_own(tomo_data,tomo_set, n):
     return np.reshape(chivect,((2*n)**2,(2*n)**2))
 
 def get_total_prob(tomo_data):
-    meas_data = tomo_data['data'] 
+    meas_data = tomo_data['data']
+    assert type(meas_data) == list
     counts = []
     for meas in meas_data:
         countsvalues = meas['counts'].values()
@@ -38,6 +39,7 @@ def get_total_prob(tomo_data):
     return counts
 
 def make_CP(chi,n):
+    assert np.shape(chi) == ((2**n)**2,(2**n)**2)
     mineig = np.min(np.linalg.eigvals(chi))
     trace_chi = np.trace(chi)
     if mineig < 0:    
@@ -53,6 +55,7 @@ def get_TPsum(chi,B_chi):
     return iden
 
 def check_TP(chi,B_chi,n):
+    assert np.shape(chi) == ((2**n)**2,(2**n)**2)
     d = 2**n
     iden = np.eye(d,dtype='complex')
     TPsum = get_TPsum(chi,B_chi)
