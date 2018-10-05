@@ -70,7 +70,7 @@ print('Tp:', an.check_TP(chi_filtered, B_chi, n))
 #%% Calculated traces and fidelities
 process_fidelity = chi_perror[0, 0]/(2**n)
 process_fidelity_unfiltered = chi_unfiltered_perror[0, 0]/(2**n)
-channel_fidelity = (2**n)*tomoself.get_max_ent_2n(n).T @ choi_filtered @ tomoself.get_max_ent_2n(n)
+channel_fidelity = (2**n)*tomoself.get_max_ent_2n(n).H @ choi_filtered @ tomoself.get_max_ent_2n(n)
 
 print('Trace of filtered Chi:', np.trace(chi_filtered))
 print('Trace of filtered Choi:', np.trace(choi_filtered))
@@ -82,5 +82,5 @@ print('Process fidelity from unfiltered error matrix:',
 print('Channel fidelity from Choi matrix:', np.float(np.abs(channel_fidelity)))
 
 #%% Plotting
-pt.plot_city(chi_filtered, tomoself.get_pauli_names(n), '$\chi_{filtered}$')
-pt.plot_city(chi_perror, tomoself.get_pauli_names(n), '$\chi_{error}$')
+pt.plot_city(chi_filtered, tomoself.get_pauli_names(n), r'$\chi_{filtered}$')
+pt.plot_city(chi_perror, tomoself.get_pauli_names(n), r'$\chi_{error}$')
