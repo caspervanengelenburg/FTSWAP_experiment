@@ -12,6 +12,10 @@ import Analysis.Paulifunctions as pf
 
 
 def get_pauli_basis(n):
+    """
+    Lists the Pauli matrices that form a basis for the space of
+    operators on `n` qubits.
+    """
     I = np.mat([[1, 0], [0, 1]])
     X = np.mat([[0, 1], [1, 0]])
     Y = 1j*np.mat([[0, -1], [1, 0]])
