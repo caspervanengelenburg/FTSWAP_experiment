@@ -163,26 +163,16 @@ def get_A_mat_faster(nq):
 
 
 def get_A_mat(B_prep, B_meas, B_chi):
-    ic = 0
-    jc = 0
-    mc = 0
-    nc = 0
     jctot = len(B_meas)
     nctot = len(B_chi)
     A = np.zeros((len(B_prep)*len(B_meas), len(B_chi)**2), dtype='complex')
-    for i in B_prep:
-        jc = 0
-        for j in B_meas:
-            mc = 0
-            for m in B_chi:
-                nc = 0
-                jmi = j @ m @ i
-                for n in B_chi:
-                    A[jc+(ic*jctot), nc+(mc*nctot)] = np.trace(jmi @ np.mat(n).H)
-                    nc += 1
-                mc += 1
-            jc += 1
-        ic += 1
+    for jc, j in enumerate(B_meas):
+        for mc, m in enumerate(B_chi):
+            jm = j @ m
+            for ic, i in enumerate(B_prep):
+                jmi = jm @ i
+                for nc, n in enumerate(B_chi):
+                    A[jc + (ic * jctot), nc + (mc * nctot)] = np.trace(jmi @ np.mat(n).H)
     return A
 #%%
 
