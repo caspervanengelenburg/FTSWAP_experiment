@@ -32,7 +32,7 @@ def get_pauli_basis(n, normalise=True):
         P2.append(reduce(np.kron, Bde))
     return P2
 
-
+"""
 def get_canonical_basis(n):
     E00 = np.mat([[1, 0], [0, 0]])
     E01 = np.mat([[0, 1], [0, 0]])
@@ -46,7 +46,7 @@ def get_canonical_basis(n):
             B = np.kron(B, i)
         E2.append(B)
     return E2
-
+"""
 
 #%%
 def get_canon_basis(n):
@@ -70,36 +70,40 @@ def get_max_ent_2n(n):
 
 #%%
 
-
 def get_choi_basis(n, chi_bas):
+    """
+    Note that you have to put in unitary operators in chi_bas in order
+    to get normalised states out in the basis.
+    """
     B_choi = []
-    I = np.array([[1, 0], [0, 1]])
+    # I = np.array([[1, 0], [0, 1]])
+    assert chi_bas[0].shape == (2**n, 2**n)
     psi_ome = get_max_ent_2n(n)
     for P in chi_bas:
-        B_choi.append(np.kron(P, np.kron(I, I))@psi_ome)
+        B_choi.append(np.kron(P, np.eye(2**n)) @ psi_ome)
     return B_choi
+
 
 #%% Mapping functions
 
-
 def unitary_to_choi(U):
     vect = np.mat(np.reshape(U, (-1, 1)))
-    return vect @ vect.T
+    return vect @ vect.H
 
 
 def choi_to_chi(choi, B_choi, n):
     choi = np.mat(choi)
     chi = np.zeros(np.shape(choi), dtype='complex')
-    for combi in itt.product(range((2**n)**2), repeat=2):
+    for combi in itt.product(range(4**n), repeat=2):
         chi[combi] = complex(B_choi[combi[0]].H @ choi @ B_choi[combi[1]])
-    return ((2**n)**2)*chi
+    return 4**n*chi
 
 
 def chi_to_choi(chi, B_choi, n):
     choi = np.zeros(np.shape(chi), dtype='complex')
-    for combi in itt.product(range((2**n)**2), repeat=2):
+    for combi in itt.product(range(4**n), repeat=2):
         choi += chi[combi] * B_choi[combi[0]] @ B_choi[combi[1]].H
-    return choi
+    return choi / np.trace(chi) # ensure choi matrix is trace 1
 
 #%%
 
